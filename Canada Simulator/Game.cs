@@ -1,4 +1,26 @@
-﻿using System;
+﻿/* The MIT License (MIT)
+
+Copyright (c) 2015 Hayden (Technoguyfication) Andreyka
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE. */
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -104,7 +126,7 @@ namespace Canada_Simulator
                                 if (PressedKey == 'y') { Clear(false); NewGame(); } else if (PressedKey == 'n') Menu();
                             }
                         }
-                        else { Clear(); NewGame(); }
+                        else { Clear(false); NewGame(); }
                 case 3:
                     Exit();
                     break;
@@ -275,9 +297,23 @@ namespace Canada_Simulator
             public void NewGame()
             {
                 Log("Generating new save...");
-                Clear(false);
-                Print("What would you like your character's name to be?", true);
-                GetInput();
+                Clear(false, false);
+                // Get what the player's name will be
+                while (true)
+                {
+                    Print("What would you like your character's name to be?", true);
+                    GetInput();
+                    // Make sure it isn't too long
+                    if (EnteredText.Length > 15)
+                    {
+                        Clear(false);
+                        Print("Your character's name may not be longer than 15 characters!", false);
+                        Pause();
+                        Clear(false);
+                    }
+                    else
+                        break;
+                }
                 Log("Generating new save with character name \"" + EnteredText + "\"");
                 // Set name
                 plyName = EnteredText;
@@ -301,22 +337,23 @@ namespace Canada_Simulator
 
             // A screen clearer
             // Clear
-            public void Clear(bool stats = true)
+            public void Clear(bool stats = true, bool check = true)
             {
                 // Clear Screen
                 Console.Clear();
                 // Stats
-                if (stats) Stats();
+                // If display stats, check whether or not we do framecheck, if not, display stats without framecheck, otherwise do both
+                if (stats) if (check) Stats(true); else if (!check) Stats(false);
                 // Log the screen clearing.
                 Log("Cleared screen. Stats: " + stats.ToString());
             }
 
             // Stats displayer - ONLY FOR USE WITH Clear(); !!
             // Stats
-            public void Stats()
+            public void Stats(bool check)
             {
                 // Check all the player stats ad run a frame check
-                Check();
+                if (check) Check();
                 // Name Label
                 PrintSameLine(plyName, ConsoleColor.Green);
                 // Health System and label
@@ -795,6 +832,7 @@ namespace Canada_Simulator
             {
                 while (true)
                 {
+                    Title("Dev area");
                     Clear();
                     Print(plyExp.ToString());
                     Print("Type the number of exp you want or x to exit.");
