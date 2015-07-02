@@ -635,7 +635,7 @@ namespace Canada_Simulator
                 }
                 else if (itemid == 2)
                 {
-                    return"Metal Hockey Stick";
+                    return "Metal Hockey Stick";
                 }
                 return null;
             }
@@ -644,6 +644,7 @@ namespace Canada_Simulator
         // CanBuy
             public bool CanBuy(int price)
             {
+                // If the player has equal or more money return true, otherwise return false
                 if (plyDollars >= price) return true; else return false;
             }
 
@@ -653,7 +654,7 @@ namespace Canada_Simulator
             public int LvlCalc()
             {
                 int lvl;
-                // Increment levels at 50, I.E. 50, 100, 150, 200, etc.
+                // Increment levels at 50, I.E. 50, 100, 150, 200, etc. exp.
                 lvl = ((25 + ((int) Math.Sqrt(25 * 25 - 4 * 25 * (-plyExp)))) / (2 * 25));
                 // Return the level
                 return lvl;
@@ -700,7 +701,7 @@ namespace Canada_Simulator
             public void Area_Init()
             {
                 Clear();
-                Area_Town();
+                Area_Home();
             }
 
             #region Town
@@ -801,29 +802,33 @@ namespace Canada_Simulator
                     GetKey();
                     if (PressedKey == 's')
                     { 
+                        // Save game
                         Clear(); 
                         SaveGame();
                     } 
                     else if (PressedKey == 't')
                     {
+                        // Go to town
                         Clear();
                         TakeEnergy(3, "travelling to the Town");
                         Area_Town(); 
                     }
                     else if (PressedKey == 'e')
-                        GameClose();
+                        GameClose(); /* exit */
                     else if (PressedKey == 'l') 
                     {
+                        // Sleep
                         Clear();
                         Sleep();
                     }
                     else if (PressedKey == 'x')
                     {
+                        // Developer area
                         Clear();
                         Area_Dev();
                     }
                     else
-                        Clear();
+                        Clear(); /* Reset menu if invalid choice is entered */
                 }
             }
 
@@ -834,6 +839,7 @@ namespace Canada_Simulator
                 {
                     Title("Dev area");
                     Clear();
+                    break; /* disabling this for now
                     Print(plyExp.ToString());
                     Print("Type the number of exp you want or x to exit.");
                     GetInput();
@@ -845,7 +851,7 @@ namespace Canada_Simulator
                     catch (Exception)
                     {
                         Print("You broke something. Good job.");
-                    }
+                    } */
                 }
             }
 
