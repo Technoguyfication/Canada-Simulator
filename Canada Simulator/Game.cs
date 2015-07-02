@@ -593,6 +593,17 @@ namespace Canada_Simulator
                 }
             }
 
+
+        // A huge freaking mission selector
+        // MissionSelect
+            public void MissionSelect(int id)
+            {
+                if (id == 1)
+                    Mission_GettingStarted();
+                else
+                    Error("Undefined");
+            }
+
         #endregion
 
         #region Method Variables
@@ -623,6 +634,18 @@ namespace Canada_Simulator
                 }
 
                 return null;
+            }
+
+        // Mission name generator
+        // MissionName
+            public string MissionName(int id)
+            {
+                if (id == 1)
+                {
+                    return "Getting Started";
+                }
+                else
+                    return "Undefined";
             }
 
         // Item ID String
@@ -673,23 +696,34 @@ namespace Canada_Simulator
 
         // Area for the missions. Each is contained in it's own method
 
-            public void Mission_Test()
+            public void Mission_GettingStarted()
             {
-                // Variables
-                int ExpEarned = 0;
-                Title("Test Mission");
-                
-                // Actual mission
-                while (true)
+                // Mission setup
+                Title("Mission: Getting Started");
+                plyCanSafelySleep = false;
+                string NarratorName = "Bob";
+                Clear();
+
+                // Mission area
                 {
-                    Print("giving 3 exp.");
-                    ExpEarned = (ExpEarned + 3);
-                    Print("break loop on keypress");
+                    Print(NarratorName + ": Welcome to Canada Simulator!");
+                    Print(NarratorName + ": Allow me to show you around, eh!");
                     Pause();
-                    Clear();
-                    break;
                 }
 
+                // Mission cleanup
+                {
+                    // Give the player 25 exp
+                    plyExp = plyExp + 25;
+
+                    Clear();
+
+                    // Tell the player mission is over
+                    Print("Mission Completed!", true, ConsoleColor.DarkYellow);
+                    Print("25 Exp Earned");
+                    Pause(false, "Press any key to end mission.");
+                    Clear();
+                }
             }
 
         #endregion
@@ -797,8 +831,8 @@ namespace Canada_Simulator
                     Print("Please choose an action:");
                     PrintSameLine("Travel to: ", ConsoleColor.Gray);
                     Print("(T)own", true, ConsoleColor.Yellow);
-                    Print("S(l)eep", true, ConsoleColor.Cyan);
-                    Print("(S)ave Game, (E)xit Game", true, ConsoleColor.Cyan);
+                    Print("Start Next (M)ission: " + MissionName(plyCurrentMission), true, ConsoleColor.Green);
+                    Print("S(l)eep, (S)ave Game, (E)xit Game", true, ConsoleColor.Cyan);
                     GetKey();
                     if (PressedKey == 's')
                     { 
@@ -826,6 +860,12 @@ namespace Canada_Simulator
                         // Developer area
                         Clear();
                         Area_Dev();
+                    }
+                    else if (PressedKey == 'm')
+                    {
+                        // Start next mission
+                        Clear();
+                        MissionSelect(plyCurrentMission);
                     }
                     else
                         Clear(); /* Reset menu if invalid choice is entered */
