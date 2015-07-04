@@ -34,9 +34,9 @@ namespace Canada_Simulator
     {
         #region Class Variables
 
-            // Initialize class variables.
+        // Initialize class variables.
 
-            // Player stats
+        // Player stats
             string plyName;
             int plyExp;
             int plyHealth;
@@ -53,12 +53,11 @@ namespace Canada_Simulator
             char PressedKey;
             string EnteredText;
             string guid;
-
         #endregion
 
         #region Menu
 
-        // Our entry point into the applciation.
+            // Our entry point into the applciation.
         public static void Main(string[] args)
         {
             // Make sure we don't have any command-line arguments to be taken care of
@@ -187,6 +186,7 @@ namespace Canada_Simulator
             public void Title(string a)
             {
                 Console.Title = ("Canada Simulator V" + Assembly.GetExecutingAssembly().GetName().Version + " - " + a);
+                Log("Changed title to " + Console.Title);
             }
 
             // A logging system
@@ -446,6 +446,7 @@ namespace Canada_Simulator
             public void NewGuid()
             {
                 guid = (Guid.NewGuid().ToString());
+                Log("Generating new GUID: " + guid);
             }
 
             // A simplified and as usual more maniputable method for Console.ReadKey()
@@ -453,6 +454,7 @@ namespace Canada_Simulator
             public void GetKey()
             {
                 PressedKey = Console.ReadKey(true).KeyChar.ToString().ToLower()[0];
+                Log("Pressed key: " + PressedKey.ToString());
             }
 
             // A way to capture text from the user
@@ -460,6 +462,7 @@ namespace Canada_Simulator
             public void GetInput()
             {
                 EnteredText = Console.ReadLine().ToString();
+                Log("Player input: " + EnteredText);
             }
 
             // A game closer
@@ -471,6 +474,14 @@ namespace Canada_Simulator
                 GetKey();
                 if (PressedKey == 's') { SaveGame(); Exit(); } else if (PressedKey == 'e') { Exit(); } else if (PressedKey == 'b') { } else GameClose();
                 Clear();
+            }
+
+            // Wait method
+            // Wait
+            public void Wait(int seconds)
+            {
+                Log("Waiting for " + seconds + " seconds.");
+                System.Threading.Thread.Sleep(int.Parse(seconds.ToString() + "000"));
             }
 
             // A failsafe in case the program somehow terminates all open methods
@@ -493,14 +504,17 @@ namespace Canada_Simulator
         // Sleep
             public void Sleep()
             {
+                Log("Sleep attempt");
                 if (plyCanSafelySleep)
                 {
                     plyEnergy = 100;
                     Clear();
+                    Log("Player succesfully slept");
                     Print("You have rested and restored all your energy.");
                 }
                 else
                 {
+                    Log("Player cannot safely sleep");
                     Print("You are not currently in a safe location to sleep.", false);
                     Print("You can still sleep, but you may may not wake up in the same condition you were.");
                     Print("Sleep anyways? (Y/N)", false);
@@ -512,15 +526,18 @@ namespace Canada_Simulator
                             Random random = new Random();
                             if (random.Next(100) < 40)
                             {
-                                TakeHealth(random.Next(25), "because you were attacked in the night");
+                                int EnergyTaken = random.Next(25);
+                                TakeHealth(EnergyTaken, "because you were attacked in the night");
                                 plyEnergy = 100;
                                 Clear();
+                                Log("Player slept, lost " + EnergyTaken.ToString() + " health.");
                                 break;
                             }
                         }
                         else if (PressedKey == 'n')
                         {
                             Clear();
+                            Log("Sleep aborted");
                             break;
                         }
                         else break;
@@ -534,6 +551,7 @@ namespace Canada_Simulator
             {
                 plyEnergy = plyEnergy - taken;
                 Clear();
+                Log("Taking " + taken + " energy from player. Reason: " + reason);
                 Print("You lost " + taken.ToString() + " energy " + reason + '.');
             }
 
@@ -543,6 +561,7 @@ namespace Canada_Simulator
             {
                 plyHealth = plyHealth - taken;
                 Clear();
+                Log("Taking " + taken + " health from player. Reason: " + reason);
                 Print("You lost " + taken.ToString() + " health " + reason);
             }
 
@@ -552,11 +571,11 @@ namespace Canada_Simulator
             {
                 if (!energy)
                 {
-                    Print("You have perished and shall forever rest in maple pepperoni.");
+                    Print("You have fallen and shall never again know the succulent flavor of maple syrup.");
                 }
                 else
                 {
-                    Print("You ran out of energy and died. Good job.");
+                    Print("You ran out of energy and died. Great job.");
                 }
                     Pause(false, "Press any key to reload from your last save");
                 LoadGame();
@@ -606,7 +625,7 @@ namespace Canada_Simulator
             public void MissionSelect(int id)
             {
                 if (id == 1)
-                    Mission_GettingStarted();
+                    Mission_Intro();
                 else
                     Error("Undefined");
             }
@@ -649,7 +668,7 @@ namespace Canada_Simulator
             {
                 if (id == 1)
                 {
-                    return "Getting Started";
+                    return "Introduction";
                 }
                 else
                     return "Undefined";
@@ -703,19 +722,24 @@ namespace Canada_Simulator
 
         // Area for the missions. Each is contained in it's own method
 
-            public void Mission_GettingStarted()
+            public void Mission_Intro()
             {
                 // Mission setup
-                Title("Mission: Getting Started");
+                Title("Introduction");
                 plyCanSafelySleep = false;
-                string NarratorName = "Bob";
-                Clear();
+                Clear(false);
 
                 // Mission area
                 {
-                    Print(NarratorName + ": Welcome to Canada Simulator!");
-                    Print(NarratorName + ": Allow me to show you around, eh!");
-                    Pause();
+                    Log("Disaplying introduction text");
+                    Print("It's 2056 and the syrup industry has fallen..");
+                    Wait(1);
+                    Print("There are no more maple trees, and society has been overthrown.");
+                    Wait(5);
+                    Clear(false);
+                    Print("This is the story of your survival.");
+                    Wait(2);
+                    Pause(false, "Press any key to enter tutorial.");
                 }
 
                 // Mission cleanup
@@ -726,6 +750,7 @@ namespace Canada_Simulator
                     Clear();
 
                     // Tell the player mission is over
+                    Log("Mission " + MissionName(plyCurrentMission) + "  ID: " + plyCurrentMission.ToString() + " complete!");
                     Print("Mission Completed!", true, ConsoleColor.DarkYellow);
                     Print("25 Exp Earned");
                     Pause(false, "Press any key to end mission.");
@@ -741,6 +766,9 @@ namespace Canada_Simulator
             // Area_Init
             public void Area_Init()
             {
+                Clear(false);
+                Mission_Intro();
+                Log("Intro complete, sending player home");
                 Clear();
                 Area_Home();
             }
