@@ -575,13 +575,20 @@ namespace Canada_Simulator
 
         // Buying Items
         // Buy
-            public void Buy(int price, int itemid, int data)
+            public void Buy(int price, int itemid, int data, bool blackmarket = false)
             {
                 if (CanBuy(price))
                 {
                     Log("Buying a " + ItemIDName(itemid) + ". ID:" + itemid);
                     object item = ItemID(itemid);
-                    plyDollars = (plyDollars - price);
+                    if (!blackmarket)
+                    {
+                        plyDollars = (plyDollars - price);
+                    }
+                    else
+                    {
+                        plySyrup = (plySyrup - price);
+                    }
                     item = data;
                     Clear();
                     Print("Bought " + ItemIDName(itemid) + " for $" + price + '.');
@@ -772,7 +779,7 @@ namespace Canada_Simulator
                     }
                 }
 
-            // Town Blacksmith
+            // Town Weapons Dealer
             // Area_Town_Weps
                 public void Area_Town_Weps()
                 {
@@ -781,8 +788,8 @@ namespace Canada_Simulator
                     {
                         Title("Weapons Dealer");
                         Log("Loading area town_weps");
-                        Print("I see you've found the way into my shop, eh!", false, ConsoleColor.Magenta);
-                        Print("Well take a look around, browse as much as you'd like.", true, ConsoleColor.Magenta);
+                        Print("Welcome to my shop, eh.", false, ConsoleColor.Magenta);
+                        Print("You're gonna need to protect yourself out there.." + NewLineStrng() + "This stuff should get the job done..", true, ConsoleColor.Magenta);
                         NewLine();
                         PrintSameLine("What would you like to buy? (Press ", ConsoleColor.Green);
                         PrintSameLine("\'X\'", ConsoleColor.Red);
