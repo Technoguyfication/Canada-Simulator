@@ -481,7 +481,7 @@ namespace Canada_Simulator
             public void Wait(int seconds)
             {
                 Log("Waiting for " + seconds + " seconds.");
-                System.Threading.Thread.Sleep(int.Parse(seconds.ToString() + "000"));
+                System.Threading.Thread.Sleep(seconds * 1000);
             }
 
             // A failsafe in case the program somehow terminates all open methods
