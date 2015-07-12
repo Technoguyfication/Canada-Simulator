@@ -792,15 +792,19 @@ namespace Canada_Simulator
                     Wait(3);
                     PrintSameLine("Maple ", ConsoleColor.Red);
                     Wait(1);
-                    Print("Syrup...", true, ConsoleColor.Red);
-                    Pause(true, "");
+                    Print("Syrup...", false, ConsoleColor.Red);
+                    Pause(false, "Press any key to continue tutorial.");
+                    // Part 2
+                    Print("You will need to buy some items from the stores at the Town and complete\nmissions to earn money and Exp.");
+                    Pause();
                 }
 
                 // Mission cleanup
                 {
                     // Give the player 25 exp
-                    plyExp = plyExp + 25;
-
+                    GiveExp(25);
+                    // Give the player 1 maple syrup
+                    GiveSyrup(1);
                     Clear();
 
                     // Tell the player mission is over
