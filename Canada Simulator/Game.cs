@@ -914,8 +914,8 @@ namespace Canada_Simulator
 
             #endregion
 
-        // Home
-        // Area_Home
+            // Home
+            // Area_Home
             public void Area_Home()
             {
                 plyCanSafelySleep = true;
@@ -965,7 +965,7 @@ namespace Canada_Simulator
                         MissionSelect(plyCurrentMission);
                     }
                     else
-                        Clear(); /* Reset menu if invalid choice is entered */
+                        Clear(); // Reset menu if invalid choice is entered
                 }
             }
 
@@ -976,7 +976,7 @@ namespace Canada_Simulator
                 {
                     Title("Dev area");
                     Clear();
-                    break; /* disabling this for now
+                    break; /* --disabling this for now--
                     Print(plyExp.ToString());
                     Print("Type the number of exp you want or x to exit.");
                     GetInput();
